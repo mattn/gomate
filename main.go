@@ -41,7 +41,9 @@ func sendFile(conn net.Conn, filename string) error {
 	fmt.Fprintf(conn, "re-activate: yes\n")
 	fmt.Fprintf(conn, "token: %v\n", hash)
 	fmt.Fprintf(conn, "data: %v\n", st.Size())
-	io.Copy(conn, f)
+	if _, err := io.Copy(conn, f); err != nil {
+		log.Fatal(err)
+	}
 	fmt.Fprintf(conn, "\n.\n")
 
 	return nil
